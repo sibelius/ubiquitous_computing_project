@@ -9,8 +9,23 @@
     tools:context=".LoginActivity">
 
     <TextView
-        android:text="@string/hello_world"
+        android:id="@+id/login_label"
+        android:text="@string/login_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/username_edit_text"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/login_label" />
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:layout_alignParentBottom="true"
+        android:onClick="clickLogin"/>
 
 </RelativeLayout>
