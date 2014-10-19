@@ -12,6 +12,18 @@
         android:id="@+id/section_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="30sp"
         android:text="@string/title_sleep_behavior"/>
+
+    <Switch
+        android:id="@+id/btn_sleep"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="50sp"
+        android:layout_toRightOf="@+id/section_label"
+        android:textOn="@string/sleeping"
+        android:textOff="@string/awake"
+        />
 
 </RelativeLayout>

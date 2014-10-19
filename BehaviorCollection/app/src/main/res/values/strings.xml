@@ -10,9 +10,9 @@
     <string name="title_section2">Sleep</string>
     <string name="title_section3">Location</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_location">Location</string>
+    <string name="title_location">Where are you right now?</string>
     <string name="title_physical_activity">Physical Activity</string>
-    <string name="title_sleep_behavior">Sleep Behavior</string>
+    <string name="title_sleep_behavior">Sleeping?</string>
 
     <string name="activity">Physical Activity</string>
     <string name="button_startActivity">Start Activity</string>
@@ -35,5 +35,10 @@
     <string name="sitting">Sitting</string>
     <string name="standing">Standing</string>
     <string name="driving">Driving</string>
+    <string name="sleeping">Sleeping</string>
+    <string name="awake">Awake</string>
+    <string name="home">Home</string>
+    <string name="school">School</string>
+    <string name="other">Other place</string>
 
 </resources>

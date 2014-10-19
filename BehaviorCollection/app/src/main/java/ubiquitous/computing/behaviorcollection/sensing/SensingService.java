@@ -10,6 +10,7 @@ import com.ubhave.datahandler.except.DataHandlerException;
 import com.ubhave.datahandler.loggertypes.AbstractDataLogger;
 import com.ubhave.sensormanager.ESException;
 import com.ubhave.sensormanager.ESSensorManager;
+import com.ubhave.sensormanager.config.GlobalConfig;
 
 import ubiquitous.computing.behaviorcollection.R;
 import ubiquitous.computing.behaviorcollection.ui.BehaviorCollectionActivity;
@@ -31,13 +32,14 @@ public class SensingService extends Service {
         try {
             System.out.println("ESSensor Service");
             mSensorManager = ESSensorManager.getSensorManager(this);
+            mSensorManager.setGlobalConfig(GlobalConfig.ACQUIRE_WAKE_LOCK, true);
         } catch (ESException e) {
             e.printStackTrace();
         }
 
         AbstractDataLogger mDataLogger = null;
         try {
-            mDataLogger = new BehaviorStoreLogger(this);
+            mDataLogger = BehaviorStoreLogger.getBehaviorStoreLogger(this);
         } catch (DataHandlerException e) {
             e.printStackTrace();
         } catch (ESException e) {

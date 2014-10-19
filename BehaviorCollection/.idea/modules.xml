@@ -4,9 +4,12 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BehaviorCollection.iml" filepath="$PROJECT_DIR$/BehaviorCollection.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/intelligenttrigger/intelligenttrigger.iml" filepath="$PROJECT_DIR$/intelligenttrigger/intelligenttrigger.iml" />
+      <module fileurl="file://$PROJECT_DIR$/machineLearningToolkit/machineLearningToolkit.iml" filepath="$PROJECT_DIR$/machineLearningToolkit/machineLearningToolkit.iml" />
       <module fileurl="file://$PROJECT_DIR$/profileManager/profileManager.iml" filepath="$PROJECT_DIR$/profileManager/profileManager.iml" />
       <module fileurl="file://$PROJECT_DIR$/sensorDataManager/sensorDataManager.iml" filepath="$PROJECT_DIR$/sensorDataManager/sensorDataManager.iml" />
       <module fileurl="file://$PROJECT_DIR$/sensorManager/sensorManager.iml" filepath="$PROJECT_DIR$/sensorManager/sensorManager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/triggerManager/triggerManager.iml" filepath="$PROJECT_DIR$/triggerManager/triggerManager.iml" />
     </modules>
   </component>
 </project>

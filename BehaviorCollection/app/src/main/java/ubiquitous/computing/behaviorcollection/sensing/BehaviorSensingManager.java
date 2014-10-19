@@ -167,6 +167,17 @@ public class BehaviorSensingManager implements SensorDataListener {
         } catch (ESException e) {
             Log.d("NOCLASSIFIER", name);
         }
+/*
+        switch(data.getSensorType()) {
+            case SensorUtils.SENSOR_TYPE_ACCELEROMETER:
+            case SensorUtils.SENSOR_TYPE_GYROSCOPE:
+                try {
+                    logEndSensing(data);
+                } catch (ESException e) {
+                    e.printStackTrace();
+                }
+        }
+        */
     }
 
     @Override
@@ -186,11 +197,19 @@ public class BehaviorSensingManager implements SensorDataListener {
         try {
             json.put(Util.TAG_SENSOR_NAME, SensorUtils.getSensorName(data.getSensorType()));
             json.put(Util.TAG_INTERESTING, classifier.isInteresting(data));
-            json.put(Util.TAG_TIMESTAMP, System.currentTimeMillis());
-            json.put(Util.TAG_LOCAL_TIME, Util.localTime());
         } catch (JSONException e) {
             e.printStackTrace();
         }
         mDataLogger.logExtra(Util.TAG_CLASSIFIER, json);
+    }
+
+    protected void logEndSensing(SensorData data) throws ESException {
+        JSONObject json = new JSONObject();
+        try {
+            json.put(Util.TAG_SENSOR_NAME, SensorUtils.getSensorName(data.getSensorType()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mDataLogger.logExtra(Util.TAG_ONDATASENSED, json);
     }
 }

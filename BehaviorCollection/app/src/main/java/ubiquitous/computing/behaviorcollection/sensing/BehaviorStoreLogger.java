@@ -16,8 +16,21 @@ import ubiquitous.computing.behaviorcollection.Util;
 public class BehaviorStoreLogger extends AbstractStoreOnlyLogger {
     private static final String LOCAL_STORAGE_DIRECTORY = "BehaviorCollection";
 
-    public BehaviorStoreLogger(Context context) throws DataHandlerException, ESException {
+    private static BehaviorStoreLogger sSingleton;
+
+    private BehaviorStoreLogger(Context context) throws DataHandlerException, ESException {
         super(context);
+    }
+
+    public static BehaviorStoreLogger getBehaviorStoreLogger(Context context) throws ESException, DataHandlerException {
+        if (context == null) {
+            throw new ESException(ESException.INVALID_PARAMETER, " Invalid parameter, context object passed is null");
+        }
+        if (sSingleton == null) {
+            sSingleton = new BehaviorStoreLogger(context);
+        }
+
+        return sSingleton;
     }
 
     @Override

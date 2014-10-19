@@ -10,8 +10,30 @@
 
     <TextView
         android:id="@+id/section_label"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="30sp"
         android:text="@string/title_location"/>
+
+    <Button
+        android:id="@+id/btn_home"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/home"
+        android:layout_below="@id/section_label"/>
+
+    <Button
+        android:id="@+id/btn_school"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/school"
+        android:layout_below="@id/btn_home"/>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/other"
+        android:layout_below="@id/btn_school"/>
 
 </RelativeLayout>
