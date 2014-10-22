@@ -1,10 +1,10 @@
 package ubiquitous.computing.behaviorcollection.ui;
 
 import android.app.Fragment;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +27,6 @@ import ubiquitous.computing.behaviorcollection.ImageText;
 import ubiquitous.computing.behaviorcollection.R;
 import ubiquitous.computing.behaviorcollection.Util;
 import ubiquitous.computing.behaviorcollection.sensing.BehaviorStoreLogger;
-import ubiquitous.computing.behaviorcollection.sensing.SensingService;
 
 /**
  * Created by sibelius on 10/17/14.
@@ -204,7 +203,14 @@ public class PhysicalActivityFragment extends Fragment {
         isPerforming = false;
         switchButtons(!isPerforming);
 
-        manageService(false);
+        // Wait 30 seconds to finish the sensor data collection
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Util.manageService(getActivity(), false);
+            }
+        }, 30 * 1000L);
 
         // Required if the count down finish in the background
         SharedPreferences.Editor editor = mPrefs.edit();
@@ -222,7 +228,7 @@ public class PhysicalActivityFragment extends Fragment {
         isPerforming = true;
         switchButtons(!isPerforming);
 
-        manageService(true);
+        Util.manageService(getActivity(), true);
 
         SharedPreferences.Editor editor = mPrefs.edit();
         editor.putLong(Util.TAG_START, System.currentTimeMillis());
@@ -230,18 +236,6 @@ public class PhysicalActivityFragment extends Fragment {
         counter = new Counter(Util.TOTAL_TIME, 1000);
         counter.start();
 
-    }
-
-    /**
-     * Start or stop the sensing service
-     * @param start decide whether to start or stop the service
-     */
-    private void manageService(boolean start) {
-        Intent serviceIntent = new Intent(getActivity(), SensingService.class);
-        if (start)
-            getActivity().startService(serviceIntent);
-        else
-            getActivity().stopService(serviceIntent);
     }
 
     private void logEvent(String event) {

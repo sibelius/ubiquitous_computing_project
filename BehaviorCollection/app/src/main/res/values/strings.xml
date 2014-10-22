@@ -40,5 +40,7 @@
     <string name="home">Home</string>
     <string name="school">School</string>
     <string name="other">Other place</string>
+    <string name="title_other_place">Other Place Name</string>
+    <string name="otherplacename">Other place name or description</string>
 
 </resources>

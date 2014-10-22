@@ -3,12 +3,15 @@ package ubiquitous.computing.behaviorcollection.sensing;
 import android.content.Context;
 import android.util.Log;
 
+import com.ubhave.datahandler.config.DataStorageConfig;
 import com.ubhave.datahandler.loggertypes.AbstractDataLogger;
 import com.ubhave.sensormanager.ESException;
 import com.ubhave.sensormanager.ESSensorManager;
 import com.ubhave.sensormanager.SensorDataListener;
 import com.ubhave.sensormanager.classifier.SensorClassifiers;
 import com.ubhave.sensormanager.classifier.SensorDataClassifier;
+import com.ubhave.sensormanager.config.pull.LocationConfig;
+import com.ubhave.sensormanager.config.pull.MicrophoneConfig;
 import com.ubhave.sensormanager.config.pull.PullSensorConfig;
 import com.ubhave.sensormanager.data.SensorData;
 import com.ubhave.sensormanager.sensors.SensorUtils;
@@ -28,6 +31,11 @@ import ubiquitous.computing.behaviorcollection.Util;
  */
 public class BehaviorSensingManager implements SensorDataListener {
 
+    // Sample 4 seconds can represent with the user is moving or stationary
+    private static final Long MOTION_SENSE_WINDOW_LENGTH_MILLIS = 4 * 1000L;
+    // Sample 5 seconds to detect noise
+    private static final Long MICROPHONE_SENSE_WINDOW_LENGTH_MILLIS = 5 * 1000L;
+
     private ESSensorManager mSensorManager;
     private AbstractDataLogger mDataLogger;
     private Context mContext;
@@ -46,7 +54,8 @@ public class BehaviorSensingManager implements SensorDataListener {
             SensorUtils.SENSOR_TYPE_BATTERY,
 
             // Location
-            SensorUtils.SENSOR_TYPE_LOCATION
+            SensorUtils.SENSOR_TYPE_LOCATION,
+            SensorUtils.SENSOR_TYPE_PASSIVE_LOCATION
     };
 
     public BehaviorSensingManager(final Context context, final AbstractDataLogger logger) {
@@ -64,11 +73,8 @@ public class BehaviorSensingManager implements SensorDataListener {
     private void setSensorConfig() {
         if (mSensorManager != null) {
             try {
-                // 50 HZ
                 // sleep only 1 second, necessary to save the data
                 long sleepMotion = 1 * 1000L;
-                // Sample 25 seconds each time
-                long sampleWindow = 25 * 1000L;
 
                 /*
                  * Set Motion sensing params
@@ -79,28 +85,40 @@ public class BehaviorSensingManager implements SensorDataListener {
                 mSensorManager.setSensorConfig(SensorUtils.SENSOR_TYPE_GYROSCOPE,
                         PullSensorConfig.POST_SENSE_SLEEP_LENGTH_MILLIS, sleepMotion);
 
-
                 // Sense window
                 mSensorManager.setSensorConfig(SensorUtils.SENSOR_TYPE_ACCELEROMETER,
-                        PullSensorConfig.SENSE_WINDOW_LENGTH_MILLIS, sampleWindow);
+                        PullSensorConfig.SENSE_WINDOW_LENGTH_MILLIS,
+                        MOTION_SENSE_WINDOW_LENGTH_MILLIS);
                 mSensorManager.setSensorConfig(SensorUtils.SENSOR_TYPE_GYROSCOPE,
-                        PullSensorConfig.SENSE_WINDOW_LENGTH_MILLIS, sampleWindow);
+                        PullSensorConfig.SENSE_WINDOW_LENGTH_MILLIS,
+                        MOTION_SENSE_WINDOW_LENGTH_MILLIS);
 
                 // Sleep for 10 second and gather more data
                 long locationSleep = 10 * 1000L;
                 /*
                  * Set location sensing params
-
+                */
                 mSensorManager.setSensorConfig(SensorUtils.SENSOR_TYPE_LOCATION,
                         LocationConfig.ACCURACY_TYPE, LocationConfig.LOCATION_ACCURACY_FINE);
                 mSensorManager.setSensorConfig(SensorUtils.SENSOR_TYPE_LOCATION,
+                        PullSensorConfig.SENSE_WINDOW_LENGTH_MILLIS,
+                        2 *  MOTION_SENSE_WINDOW_LENGTH_MILLIS);
+                mSensorManager.setSensorConfig(SensorUtils.SENSOR_TYPE_LOCATION,
                         PullSensorConfig.POST_SENSE_SLEEP_LENGTH_MILLIS, locationSleep);
-*/
                 /*
                  * Set microphone sensing params
                 */
-                //sensorManager.setSensorConfig(SensorUtils.SENSOR_TYPE_MICROPHONE, PullSensorConfig.SENSE_WINDOW_LENGTH_MILLIS, 2000L);
-                //sensorManager.setSensorConfig(SensorUtils.SENSOR_TYPE_MICROPHONE, PullSensorConfig.POST_SENSE_SLEEP_LENGTH_MILLIS, 5000L);
+                mSensorManager.setSensorConfig(SensorUtils.SENSOR_TYPE_MICROPHONE, PullSensorConfig.SENSE_WINDOW_LENGTH_MILLIS, 2000L);
+                mSensorManager.setSensorConfig(SensorUtils.SENSOR_TYPE_MICROPHONE,
+                        PullSensorConfig.SENSE_WINDOW_LENGTH_MILLIS,
+                        MICROPHONE_SENSE_WINDOW_LENGTH_MILLIS);
+
+                String rootDirectory = (String) mDataLogger.getDataManager().getConfig(DataStorageConfig.LOCAL_STORAGE_ROOT_DIRECTORY_NAME);
+
+				/*
+				 * Store audio files to /Sounds
+				 */
+                mSensorManager.setSensorConfig(SensorUtils.SENSOR_TYPE_MICROPHONE, MicrophoneConfig.AUDIO_FILES_DIRECTORY, rootDirectory + "/Sounds");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -167,17 +185,6 @@ public class BehaviorSensingManager implements SensorDataListener {
         } catch (ESException e) {
             Log.d("NOCLASSIFIER", name);
         }
-/*
-        switch(data.getSensorType()) {
-            case SensorUtils.SENSOR_TYPE_ACCELEROMETER:
-            case SensorUtils.SENSOR_TYPE_GYROSCOPE:
-                try {
-                    logEndSensing(data);
-                } catch (ESException e) {
-                    e.printStackTrace();
-                }
-        }
-        */
     }
 
     @Override
@@ -190,7 +197,7 @@ public class BehaviorSensingManager implements SensorDataListener {
      * @param data
      * @throws ESException
      */
-    protected void logClassification(SensorData data) throws ESException {
+    public void logClassification(SensorData data) throws ESException {
         SensorDataClassifier classifier = SensorClassifiers.getSensorClassifier(data.getSensorType());
 
         JSONObject json = new JSONObject();

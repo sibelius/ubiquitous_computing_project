@@ -2,25 +2,24 @@ package ubiquitous.computing.behaviorcollection.ui;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.util.Locale;
 
 import ubiquitous.computing.behaviorcollection.R;
+import ubiquitous.computing.behaviorcollection.Util;
 
 
-public class BehaviorCollectionActivity extends Activity implements ActionBar.TabListener {
-
+public class BehaviorCollectionActivity extends Activity
+        implements ActionBar.TabListener, OtherPlaceDialogFragment.OtherPlaceDialogListener {
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -76,6 +75,14 @@ public class BehaviorCollectionActivity extends Activity implements ActionBar.Ta
         }
     }
 
+    public void onResume() {
+        super.onResume();
+    }
+
+    public void onPause() {
+        super.onPause();
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -112,6 +119,22 @@ public class BehaviorCollectionActivity extends Activity implements ActionBar.Ta
 
     @Override
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
+    }
+
+
+    // Dialog response of Other Place
+    @Override
+    public void onDialogPositiveClick(DialogFragment dialog, String otherPlace) {
+        // Log new location
+        new SenseLocationTask(this) {
+        }.execute();
+
+        Util.logLocation(this, otherPlace);
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        // Cancel log of new location
     }
 
     /**
@@ -161,38 +184,4 @@ public class BehaviorCollectionActivity extends Activity implements ActionBar.Ta
             return null;
         }
     }
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_behavior_collection, container, false);
-            return rootView;
-        }
-    }
-
 }

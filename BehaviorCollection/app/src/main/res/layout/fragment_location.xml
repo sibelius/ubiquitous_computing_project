@@ -31,6 +31,7 @@
         android:layout_below="@id/btn_home"/>
 
     <Button
+        android:id="@+id/btn_other"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="@string/other"
